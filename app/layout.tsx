@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import type { JSX, ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Alya & Ismail — Undangan Pernikahan',
-  description: 'Undangan pernikahan Alya dan Ismail.'
+  title: 'Alya Aulia & Muhammad Ismail Marzuki — Undangan Pernikahan',
+  description: 'Undangan pernikahan Alya Aulia dan Muhammad Ismail Marzuki.'
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>): JSX.Element {
