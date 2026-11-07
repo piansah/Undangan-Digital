@@ -77,3 +77,7 @@ footer{z-index:600}.invitation-closed~footer{display:flex}
 .couple-illustration img{left:-3.5%;top:-3.5%;width:107%;height:107%}
 @media(max-width:700px){.couple-illustration img{left:-3.5%;top:-3.5%;width:107%;height:107%}}
 .couple-illustration,.couple-illustration img{border:0!important;outline:0!important;box-shadow:none!important}.couple-illustration:before,.couple-illustration:after{border:0!important;outline:0!important;box-shadow:none!important;background:none!important}
+.rsvp-art{background-size:cover,140% auto;background-position:center,center 58%}
+@media(max-width:700px){.rsvp-art{background-size:cover,140% auto;background-position:center,center 58%}}
+.rsvp-art{background-size:cover,175% auto;background-position:center,center 64%}
+@media(max-width:700px){.rsvp-art{background-size:cover,175% auto;background-position:center,center 64%}}
