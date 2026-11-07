@@ -196,7 +196,7 @@ export default function Home(): JSX.Element {
         <section className={`hero${invitationOpened ? ' hero-opened' : ''}`} id="home">
           <div className="hero-card">
             <div className="hero-photo" role="img" aria-label="Foto pasangan pengantin" />
-            <div className="hero-copy"><p className="eyebrow light">THE WEDDING OF</p><h1>Alya <i>&</i><br />Ismail</h1><p className="hero-date">MINGGU, 22 NOVEMBER 2026</p><button className="button button-light" type="button" onClick={enterInvitation}>Buka Undangan</button></div>
+            <div className="hero-copy"><p className="eyebrow light">THE WEDDING OF</p><h1>Alya Aulia <i>&</i><br />Muhammad Ismail</h1><p className="hero-date">MINGGU, 22 NOVEMBER 2026</p><button className="button button-light" type="button" onClick={enterInvitation}>Buka Undangan</button></div>
           </div>
           <div className="hero-caption"><span>22 · 11 · 2026</span><span>RAJAGALUH</span></div>
         </section>
