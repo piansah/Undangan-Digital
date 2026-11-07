@@ -20,9 +20,9 @@ Semua nama, keluarga, tanggal, alamat, dan tempat adalah **data contoh**. Periks
 1. Buat Google Sheet baru, lalu buka **Extensions → Apps Script**.
 2. Salin isi `google-apps-script/Code.gs` ke editor Apps Script dan simpan.
 3. Pilih **Deploy → New deployment → Web app**. Atur **Execute as: Me** dan **Who has access: Anyone**, lalu deploy dan izinkan akses Sheets/Drive saat diminta.
-4. Salin URL Web App yang berakhiran `/exec` dan masukkan ke konstanta `RSVP_ENDPOINT` di `app/page.tsx`. Endpoint Apps Script adalah URL publik, bukan password.
-5. Restart server lokal atau deploy ulang di Vercel agar endpoint baru digunakan.
+4. Pastikan URL Web App berakhiran `/exec` dan sesuai dengan `APPS_SCRIPT_URL` di `app/api/rsvp/route.ts`.
+5. Deploy ulang di Vercel setelah perubahan kode agar endpoint proxy baru aktif.
 
-Script akan membuat tab `RSVP` saat kiriman pertama dan menulis waktu, nama, nama penerima undangan, status kehadiran, serta ucapan. Bukti tanda kasih (opsional, maksimal 5 MB) disimpan ke Google Drive pemilik Apps Script; tautan file dicatat di sheet. Jangan bagikan akses spreadsheet/Drive jika bukti harus tetap privat.
+Script akan membuat tab `RSVP` saat kiriman pertama dan menulis waktu, nama, nama penerima undangan, status kehadiran, serta ucapan. Bukti tanda kasih (opsional, maksimal 3 MB) disimpan ke Google Drive pemilik Apps Script; tautan file dicatat di sheet. Jangan bagikan akses spreadsheet/Drive jika bukti harus tetap privat.
 
-Browser mengirim RSVP dengan mode no-cors agar Google Apps Script dapat menerima POST lintas origin. Karena itu halaman tidak bisa membaca balasan server; pesan sukses di halaman menandakan request terkirim, bukan verifikasi bahwa baris berhasil ditulis. Pastikan deployment Apps Script aktif dan lakukan satu kiriman percobaan sebelum membagikan undangan.
+Form mengirim RSVP ke route Next.js `/api/rsvp`, yang meneruskan kiriman ke Apps Script dari server. Website hanya menampilkan sukses jika Apps Script membalas bahwa baris sudah tersimpan; jika tidak, pesan galat akan ditampilkan.

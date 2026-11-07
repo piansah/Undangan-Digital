@@ -6,12 +6,11 @@ const weddingDate = new Date('2026-11-22T08:00:00+07:00').getTime();
 type Countdown = { days: string; hours: string; minutes: string; seconds: string };
 const PROMO_AUTHOR = 'Alif Alpian';
 const PROMO_WHATSAPP = '6285793571194';
-const RSVP_ENDPOINT = process.env.NEXT_PUBLIC_RSVP_ENDPOINT || 'https://script.google.com/macros/s/AKfycbzSzmS_9ibublchwQdJRBAbHQNe6dFPljHlf-mKmcado9_zFsgvc-P1vsQ1VTLj34M/exec';
 
 export default function Home(): JSX.Element {
   const [guestName, setGuestName] = useState('Tamu Undangan');
   const [countdown, setCountdown] = useState<Countdown>({ days: '00', hours: '00', minutes: '00', seconds: '00' });
-  const [formNote, setFormNote] = useState(RSVP_ENDPOINT ? 'Konfirmasi akan dikirim ke Google Sheets.' : 'Formulir belum terhubung ke Google Sheets.');
+  const [formNote, setFormNote] = useState('Konfirmasi akan dikirim ke Google Sheets.');
   const [attendance, setAttendance] = useState('Hadir');
   const [proofName, setProofName] = useState('');
   const [activePhoto, setActivePhoto] = useState<{ src: string; alt: string } | null>(null);
@@ -144,26 +143,28 @@ export default function Home(): JSX.Element {
 
   async function submitRsvp(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    if (!RSVP_ENDPOINT) {
-      setFormNote('RSVP belum aktif. Tambahkan URL Apps Script pada NEXT_PUBLIC_RSVP_ENDPOINT.');
-      return;
-    }
     setFormNote('Mengirim konfirmasi…');
     const form = event.currentTarget;
     const data = new FormData(form);
     const proof = data.get('proof');
     let proofFile: { name: string; mimeType: string; base64: string } | null = null;
     if (proof instanceof File && proof.size > 0) {
-      if (proof.size > 5 * 1024 * 1024) {
-        setFormNote('Ukuran bukti maksimal 5 MB.');
+      if (proof.size > 3 * 1024 * 1024) {
+        setFormNote('Ukuran bukti maksimal 3 MB.');
         return;
       }
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result));
-        reader.onerror = () => reject(new Error('File tidak dapat dibaca.'));
-        reader.readAsDataURL(proof);
-      });
+      let dataUrl: string;
+      try {
+        dataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result));
+          reader.onerror = () => reject(new Error('File tidak dapat dibaca.'));
+          reader.readAsDataURL(proof);
+        });
+      } catch {
+        setFormNote('Bukti tidak dapat dibaca. Pilih file lain lalu coba lagi.');
+        return;
+      }
       proofFile = { name: proof.name, mimeType: proof.type || 'application/octet-stream', base64: dataUrl.split(',')[1] || '' };
     }
     const payload = {
@@ -174,13 +175,15 @@ export default function Home(): JSX.Element {
       proof: proofFile
     };
     try {
-      await fetch(RSVP_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-      setFormNote('Konfirmasi terkirim. Terima kasih!');
+      const response = await fetch('/api/rsvp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || 'Google Sheets menolak kiriman.');
+      setFormNote('Konfirmasi berhasil disimpan. Terima kasih!');
       form.reset();
       setAttendance('Hadir');
       setProofName('');
-    } catch {
-      setFormNote('Pengiriman gagal. Periksa koneksi lalu coba lagi.');
+    } catch (error) {
+      setFormNote(error instanceof Error ? `Konfirmasi gagal disimpan: ${error.message}` : 'Konfirmasi gagal disimpan. Periksa koneksi lalu coba lagi.');
     }
   }
 
