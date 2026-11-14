@@ -6,6 +6,9 @@ const weddingDate = new Date('2026-11-22T08:00:00+07:00').getTime();
 type Countdown = { days: string; hours: string; minutes: string; seconds: string };
 const PROMO_AUTHOR = 'Alif Alpian';
 const PROMO_WHATSAPP = '6285793571194';
+const BANK_NAME = 'BANK MANDIRI';
+const ACCOUNT_NUMBER = '1340020629878';
+const ACCOUNT_OWNER = 'A.N. ALYA AULIA';
 
 export default function Home(): JSX.Element {
   const [guestName, setGuestName] = useState('Tamu Undangan');
@@ -21,6 +24,7 @@ export default function Home(): JSX.Element {
   const musicRef = useRef<HTMLAudioElement>(null);
   const [revealedItems, setRevealedItems] = useState<Set<string>>(() => new Set());
   const [promoOpen, setPromoOpen] = useState(false);
+  const [giftNote, setGiftNote] = useState('');
 
   useEffect(() => {
     const timer = window.setTimeout(() => setInvitationOpened(true), 120);
@@ -141,6 +145,15 @@ export default function Home(): JSX.Element {
     };
   }, [promoOpen]);
 
+  async function copyAccount(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(ACCOUNT_NUMBER);
+      setGiftNote('Nomor rekening berhasil disalin.');
+    } catch {
+      setGiftNote(`Silakan salin nomor rekening: ${ACCOUNT_NUMBER}`);
+    }
+  }
+
   async function submitRsvp(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setFormNote('Mengirim konfirmasi…');
@@ -216,7 +229,7 @@ export default function Home(): JSX.Element {
 
         <section className="countdown section"><div data-reveal="countdown-title"><p className="eyebrow">MENUJU HARI BAHAGIA</p><h2>Tak sabar bertemu<br /><i>di hari istimewa.</i></h2></div><div className="timer" aria-label="Hitung mundur" data-reveal="countdown-timer">{Object.entries({ HARI: countdown.days, JAM: countdown.hours, MENIT: countdown.minutes, DETIK: countdown.seconds }).map(([label, value]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div></section>
 
-        <section className="gift section" id="tanda-kasih"><div className="gift-heading" data-reveal="gift-heading"><p className="eyebrow">AMPLOP DIGITAL</p><h2>Tanda Kasih</h2><div className="gallery-divider"><span /></div><p>Doa dan kehadiran Anda adalah hadiah terindah bagi kami.<br />Jika berkenan, tanda kasih dapat disampaikan melalui rekening berikut:</p></div><div className="gift-card" data-reveal="gift-card"><p className="bank-name">BANK</p><div className="bank-rule" /><p className="account-number">00000000</p><p className="account-owner">NOMOR REKENING CONTOH</p></div></section>
+        <section className="gift section" id="tanda-kasih"><div className="gift-heading" data-reveal="gift-heading"><p className="eyebrow">AMPLOP DIGITAL</p><h2>Tanda Kasih</h2><div className="gallery-divider"><span /></div><p>Doa dan kehadiran Anda adalah hadiah terindah bagi kami.<br />Jika berkenan, tanda kasih dapat disampaikan melalui rekening berikut:</p></div><div className="gift-card" data-reveal="gift-card"><p className="bank-name">{BANK_NAME}</p><div className="bank-rule" /><p className="account-number">{ACCOUNT_NUMBER}</p><p className="account-owner">{ACCOUNT_OWNER}</p><button className="copy-button" type="button" onClick={copyAccount}><span>⧉</span>SALIN NOMOR REKENING</button><p className="gift-note" aria-live="polite">{giftNote}</p></div></section>
 
     <section className="rsvp section" id="rsvp"><div className="rsvp-art" data-reveal="rsvp-art"><span>WITH LOVE</span><strong>A<i>&amp;</i>M</strong></div><div className="rsvp-content" data-reveal="rsvp-form"><div className="section-label"><span>04</span> KONFIRMASI</div><p className="eyebrow">KEHADIRANMU BERARTI</p><h2>Bisakah kami<br /><i>menghitungmu hadir?</i></h2><p className="body-copy">Mohon konfirmasi kehadiran dan tinggalkan doa terbaik untuk kami.</p><form onSubmit={submitRsvp}><label htmlFor="name">Nama</label><input id="name" name="name" placeholder="Nama lengkap" required /><label htmlFor="attendance">Konfirmasi kehadiran</label><select id="attendance" name="attendance" value={attendance} onChange={(event) => setAttendance(event.target.value)}><option value="Hadir">Dengan senang hati, hadir</option><option value="Tidak hadir">Maaf, belum bisa hadir</option></select>{attendance === 'Tidak hadir' && <div className="proof-field"><label htmlFor="proof">Bukti tanda kasih <span>(opsional)</span></label><p>Jika Anda telah mengirimkan tanda kasih melalui rekening, silakan lampirkan bukti transfer.</p><input id="proof" name="proof" type="file" accept="image/*,.pdf,application/pdf" onChange={(event) => setProofName(event.target.files?.[0]?.name || '')} /><span className="proof-file-name">{proofName || 'Pilih gambar atau PDF'}</span></div>}<label htmlFor="message">Ucapan &amp; doa</label><textarea id="message" name="message" rows={3} placeholder="Tuliskan ucapan untuk kedua mempelai" /><button className="button button-dark" type="submit">Kirim konfirmasi <span>↗</span></button><p className="form-note">{formNote}</p></form></div></section>
       <section className="closing" data-reveal="closing"><img className="closing-flower" src="/ornaments/floral-divider.svg" alt="" /><p className="eyebrow light">SAMPAI JUMPA</p><h2>Dengan cinta,<br /><i>Alya &amp; Ismail</i></h2><p>Terima kasih atas doa dan restunya.</p></section>
@@ -227,4 +240,4 @@ export default function Home(): JSX.Element {
       {activePhoto && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Foto galeri" onClick={() => setActivePhoto(null)}><img className="lightbox-image" src={activePhoto.src} alt={activePhoto.alt} onClick={() => setActivePhoto(null)} /></div>}
     </>
   );
-}
+                                                                                                                                     }
