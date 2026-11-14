@@ -85,3 +85,17 @@ footer{z-index:600}.invitation-closed~footer{display:flex}
 
 @media(max-width:700px){.hero h1{font-size:clamp(56px,13vw,80px);line-height:.98;letter-spacing:0;margin:8px auto 16px}.hero-copy{width:94%}}
 @media(max-width:380px){.hero h1{font-size:clamp(48px,13vw,58px);line-height:1}}
+
+/* Judul hero satu baris di mobile */
+.hero h1.hero-title{white-space:nowrap}
+@media(max-width:700px){
+  .hero h1.hero-title{font-size:clamp(34px,12.5vw,60px);line-height:1.1;letter-spacing:0}
+}
+
+/* Countdown satu baris di mobile */
+@media(max-width:700px){
+  .timer{display:grid;width:100%;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .timer div{padding:12px 2px;border-top:1px solid #d7c3b4}
+  .timer strong{font-size:clamp(26px,8vw,36px);line-height:1}
+  .timer span{font-size:clamp(7px,2vw,9px);letter-spacing:.1em}
+}
